@@ -17,7 +17,6 @@ import (
 )
 
 func RunServer() {
-	os.Setenv("HTTP_PORT", "5001")
 	cfg := cfg.GetConfig()
 
 	e := echo.New()
