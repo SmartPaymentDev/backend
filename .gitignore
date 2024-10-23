@@ -1,0 +1,5 @@
+.idea/
+/shared/assets/excel/*.xlsx
+/shared/assets/csv/*.csv
+/shared/assets/pdf/*.pdf
+/shared/assets/qr_code/*.png
