@@ -5,68 +5,75 @@ import "smart-payment-dev-be/internal/core/domain"
 type UserDTO struct{}
 
 type User struct {
-	Id       int    `json:"id"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
+	CUSTID     int    `json:"custid"`
+	NOCUST     string `json:"nocust"`
+	NMCUST     string `json:"nmcust"`
+	NUM2ND     string `json:"num_2_nd"`
+	STCUST     string `json:"stcust"`
+	CODE01     string `json:"code_01"`
+	DESC01     string `json:"desc_01"`
+	CODE02     string `json:"code_02"`
+	DESC02     string `json:"desc_02"`
+	CODE03     string `json:"code_03"`
+	DESC03     string `json:"desc_03"`
+	CODE04     string `json:"code_04"`
+	DESC04     string `json:"desc_04"`
+	CODE05     string `json:"code_05"`
+	DESC05     string `json:"desc_05"`
+	TOTPAY     string `json:"totalpay"`
+	GENUS      string `json:"genus"`
+	LastUpdate string `json:"last_update"`
+	NO_WA      string `json:"noWa"`
 }
 
-type CreateUserRequest struct {
-	Name     string `json:"name"`
-	Password string `json:"password"`
-}
-
-type UpdateUserRequest struct {
-	Id       int    `json:"id"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
+type LoginUserRequest struct {
+	NOCUST         string `json:"nocust"`
+	MOBILEPASSWORD string `json:"mobilepassword"`
 }
 
 type UserResponse struct {
+	JwtToken string `json:"jwt_token"`
+}
+
+type UserResponseByMe struct {
 	User User `json:"user"`
 }
 
-type UsersResponse struct {
-	Users []User `json:"users"`
-	Total int    `json:"total"`
-}
-
-func (ud *UserDTO) CreateUserTransformIn(req CreateUserRequest) domain.User {
+func (ud *UserDTO) LoginUserTransformIn(req LoginUserRequest) domain.User {
 	return domain.User{
-		Name:     req.Name,
-		Password: req.Password,
+		NOCUST:         req.NOCUST,
+		MOBILEPASSWORD: req.MOBILEPASSWORD,
 	}
 }
 
-func (ud *UserDTO) UpdateUserTransformIn(req UpdateUserRequest) domain.User {
-	return domain.User{
-		Id:       req.Id,
-		Name:     req.Name,
-		Password: req.Password,
-	}
-}
-
-func (ud *UserDTO) GetUserTransformOut(res domain.User) UserResponse {
+func (ud *UserDTO) LoginUserTransformOut(token string) UserResponse {
 	return UserResponse{
-		User: User{
-			Id:       res.Id,
-			Name:     res.Name,
-			Password: res.Password,
-		},
+		JwtToken: token,
 	}
 }
 
-func (ud *UserDTO) GetUsersTransformOut(req []domain.User, total int) (res UsersResponse) {
-	var users []User
-	for _, item := range req {
-		user := User{
-			Id:       item.Id,
-			Name:     item.Name,
-			Password: item.Password,
-		}
-		users = append(users, user)
-	}
-	return UsersResponse{
-		Users: users,
-		Total: total,
+func (ud *UserDTO) GetUserByMe(user domain.User) UserResponseByMe {
+	return UserResponseByMe{
+		User: User{
+			CUSTID:     user.CUSTID,
+			NOCUST:     user.NOCUST,
+			NMCUST:     user.NMCUST,
+			NUM2ND:     user.NUM2ND,
+			STCUST:     user.STCUST,
+			CODE01:     user.CODE01,
+			DESC01:     user.DESC01,
+			CODE02:     user.CODE02,
+			DESC02:     user.DESC02,
+			CODE03:     user.CODE03,
+			DESC03:     user.DESC03,
+			CODE04:     user.CODE04,
+			DESC04:     user.DESC04,
+			CODE05:     user.CODE05,
+			DESC05:     user.DESC05,
+			TOTPAY:     user.TOTPAY,
+			GENUS:      user.GENUS,
+			LastUpdate: user.LastUpdate,
+			NO_WA:      user.NO_WA,
+		},
 	}
 }

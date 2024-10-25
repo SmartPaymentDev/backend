@@ -6,9 +6,6 @@ import (
 )
 
 type UserService interface {
-	CreateUser(ctx context.Context, req dto.CreateUserRequest) error
-	GetUser(ctx context.Context) (dto.UsersResponse, error)
-	GetUserById(ctx context.Context, id int) (dto.UserResponse, error)
-	UpdateUserById(ctx context.Context, params dto.UpdateUserRequest) error
-	DeleteUserById(ctx context.Context, id int) error
+	LoginUser(ctx context.Context, req dto.LoginUserRequest) (interface{}, error)
+	GetUserByMe(ctx context.Context, token string) (interface{}, error)
 }

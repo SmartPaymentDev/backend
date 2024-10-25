@@ -15,11 +15,10 @@ type DLockConfig struct {
 type RepositoryRegistry struct {
 	db *sqlx.DB
 	// cache      *cache.RedisClient
-	dbExecutor any // eksekutor database
+	dbExecutor repository2.DBExecutor // eksekutor database
 }
 
-func NewRepositoryRegistry() registry.RepositoryRegistry {
-	var db *sqlx.DB
+func NewRepositoryRegistry(db *sqlx.DB) registry.RepositoryRegistry {
 	repo := &RepositoryRegistry{
 		db: db,
 		// cache: cache,
@@ -30,9 +29,32 @@ func NewRepositoryRegistry() registry.RepositoryRegistry {
 
 func (r *RepositoryRegistry) GetUserRepository() repository.UserRepository {
 	if r.dbExecutor != nil {
-		//return repository2.NewUserRepository(r.dbExecutor)
-		return repository2.NewUserRepository(r.db)
+		return repository2.NewUserRepository(r.dbExecutor)
 	}
 
 	return repository2.NewUserRepository(r.db)
+}
+
+func (r *RepositoryRegistry) GetBillRepository() repository.BillRepository {
+	if r.dbExecutor != nil {
+		return repository2.NewBillRepository(r.dbExecutor)
+	}
+
+	return repository2.NewBillRepository(r.db)
+}
+
+func (r *RepositoryRegistry) GetVPaymentDetailRepository() repository.VPaymentDetailRepository {
+	if r.dbExecutor != nil {
+		return repository2.NewVPaymentDetailRepository(r.dbExecutor)
+	}
+
+	return repository2.NewVPaymentDetailRepository(r.db)
+}
+
+func (r *RepositoryRegistry) GetTransactionRepository() repository.TransactionRepository {
+	if r.dbExecutor != nil {
+		return repository2.NewTransactionRepository(r.dbExecutor)
+	}
+
+	return repository2.NewTransactionRepository(r.db)
 }

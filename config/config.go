@@ -13,6 +13,7 @@ type Config struct {
 	Username     string `env:"DB_USER"`
 	Password     string `env:"DB_PASSWORD"`
 	Dbname       string `env:"DB_DATABASE"`
+	SECREET_KEY  string `env:"SECREET_KEY"`
 }
 
 var (

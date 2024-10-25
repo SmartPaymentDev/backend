@@ -10,4 +10,6 @@ import (
 func Apply(e *echo.Echo, g *echo.Group, serviceRegistry registry.ServiceRegistry) {
 	handlerV1 := hv.New(serviceRegistry)
 	group.NewUserV1(e, g, handlerV1)
+	group.NewBillV1(e, g, handlerV1)
+	group.NewTransactionV1(e, g, handlerV1)
 }

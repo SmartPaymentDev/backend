@@ -6,78 +6,37 @@ import (
 	"smart-payment-dev-be/internal/adapter/inbound/dto"
 	errorCode "smart-payment-dev-be/shared/error"
 	"smart-payment-dev-be/shared/util"
-	"strconv"
+	"strings"
 )
 
-func (h *Handler) CreateUser() func(echo.Context) error {
+func (h *Handler) LoginUser() func(echo.Context) error {
 	return func(c echo.Context) error {
-		var banner dto.CreateUserRequest
-		if err := c.Bind(&banner); err != nil {
+		var user dto.LoginUserRequest
+		if err := c.Bind(&user); err != nil {
 			return err
 		}
 
 		service := h.serviceRegistry.GetUserService()
-		err := service.CreateUser(c.Request().Context(), banner)
+		resp, err := service.LoginUser(c.Request().Context(), user)
 		if err != nil {
 			return util.SetResponse(c, http.StatusInternalServerError, errorCode.INTERNAL_SERVER_ERROR, err.Error())
 		}
 
-		return util.SetResponse(c, http.StatusOK, "success", nil)
+		return util.SetResponse(c, http.StatusOK, "success", resp)
 	}
 }
 
-func (h *Handler) GetUsers() func(echo.Context) error {
+func (h *Handler) GetUserByMe() func(echo.Context) error {
 	return func(c echo.Context) error {
+		auth := c.Request().Header.Get("Authorization")
+		token := strings.ReplaceAll(auth, "Bearer ", "")
+
 		service := h.serviceRegistry.GetUserService()
-		res, err := service.GetUser(c.Request().Context())
+		resp, err := service.GetUserByMe(c.Request().Context(), token)
 		if err != nil {
 			return util.SetResponse(c, http.StatusInternalServerError, errorCode.INTERNAL_SERVER_ERROR, err.Error())
 		}
 
-		return util.SetResponse(c, http.StatusOK, "success", res)
-	}
-}
-
-func (h *Handler) GetUserById() func(echo.Context) error {
-	return func(c echo.Context) error {
-		id, _ := strconv.Atoi(c.Param("id"))
-
-		service := h.serviceRegistry.GetUserService()
-		res, err := service.GetUserById(c.Request().Context(), id)
-		if err != nil {
-			return util.SetResponse(c, http.StatusInternalServerError, errorCode.INTERNAL_SERVER_ERROR, err.Error())
-		}
-		return util.SetResponse(c, http.StatusOK, "success", res)
-	}
-}
-
-func (h *Handler) UpdateUserById() func(echo.Context) error {
-	return func(c echo.Context) error {
-		var updateUser dto.UpdateUserRequest
-		updateUser.Id, _ = strconv.Atoi(c.Param("id"))
-		if err := c.Bind(&updateUser); err != nil {
-			return err
-		}
-
-		service := h.serviceRegistry.GetUserService()
-		err := service.UpdateUserById(c.Request().Context(), updateUser)
-		if err != nil {
-			return util.SetResponse(c, http.StatusInternalServerError, errorCode.INTERNAL_SERVER_ERROR, err.Error())
-		}
-
-		return util.SetResponse(c, http.StatusOK, "Success", nil)
-	}
-}
-
-func (h *Handler) DeleteUserById() func(echo.Context) error {
-	return func(c echo.Context) error {
-		id, _ := strconv.Atoi(c.Param("id"))
-
-		service := h.serviceRegistry.GetUserService()
-		err := service.DeleteUserById(c.Request().Context(), id)
-		if err != nil {
-			return util.SetResponse(c, http.StatusInternalServerError, errorCode.INTERNAL_SERVER_ERROR, err.Error())
-		}
-		return util.SetResponse(c, http.StatusOK, "Success", nil)
+		return util.SetResponse(c, http.StatusOK, "success", resp)
 	}
 }
