@@ -40,3 +40,21 @@ func (h *Handler) GetUserByMe() func(echo.Context) error {
 		return util.SetResponse(c, http.StatusOK, "success", resp)
 	}
 }
+
+func (h *Handler) ChangePassword() func(echo.Context) error {
+	return func(c echo.Context) error {
+		var req dto.ChangePasswordRequest
+
+		service := h.serviceRegistry.GetUserService()
+		if err := c.Bind(&req); err != nil {
+			return err
+		}
+
+		err := service.ChangePassword(c.Request().Context(), req)
+		if err != nil {
+			return util.SetResponse(c, http.StatusInternalServerError, errorCode.INTERNAL_SERVER_ERROR, err.Error())
+		}
+
+		return util.SetResponse(c, http.StatusOK, "success", nil)
+	}
+}

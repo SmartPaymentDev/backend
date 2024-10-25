@@ -58,7 +58,7 @@ func CreateJwtToken(custId int, noCust, nmCust, noWa string) (string, error) {
 		nmCust,
 		noWa,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 6).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * 24 * 320).Unix(),
 		},
 	}
 
@@ -71,8 +71,8 @@ func CreateJwtToken(custId int, noCust, nmCust, noWa string) (string, error) {
 	return token, nil
 }
 
-func EncryptPassword(passInput, originalHashed string) bool {
-	inputHashed := hashMD5(passInput)
+func ComparePassword(passInput, originalHashed string) bool {
+	inputHashed := EncrypCode(passInput)
 
 	// Compare the hashed passwords
 	if originalHashed == inputHashed {
@@ -81,7 +81,7 @@ func EncryptPassword(passInput, originalHashed string) bool {
 	return false
 }
 
-func hashMD5(text string) string {
+func EncrypCode(text string) string {
 	hasher := md5.New()
 	hasher.Write([]byte(text))
 	return hex.EncodeToString(hasher.Sum(nil))

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"smart-payment-dev-be/internal/adapter/inbound/dto"
+	"smart-payment-dev-be/internal/core/domain"
 	"smart-payment-dev-be/internal/core/port/outbound/registry"
 	"smart-payment-dev-be/shared/util"
 )
@@ -29,7 +30,7 @@ func (b *UserService) LoginUser(ctx context.Context, req dto.LoginUserRequest) (
 	if err != nil {
 		return nil, errors.New("NO CUST NOT FOUND")
 	}
-	validPass := util.EncryptPassword(req.MOBILEPASSWORD, user.MOBILEPASSWORD)
+	validPass := util.ComparePassword(req.MOBILEPASSWORD, user.MOBILEPASSWORD)
 	if !validPass {
 		return nil, errors.New("PASSWORD NOT MATCH")
 	}
@@ -62,4 +63,27 @@ func (b *UserService) GetUserByMe(ctx context.Context, token string) (interface{
 	resp := userDTO.GetUserByMe(user)
 
 	return resp, nil
+}
+
+func (b *UserService) ChangePassword(ctx context.Context, req dto.ChangePasswordRequest) error {
+	repo := b.repositoryRegistry.GetUserRepository()
+	user, err := repo.GetUserByNoCust(ctx, req.NoCust)
+	if err != nil {
+		return errors.New("NO CUST NOT FOUND")
+	}
+	validPass := util.ComparePassword(req.OldPassword, user.MOBILEPASSWORD)
+	if !validPass {
+		return errors.New("OLD PASSWORD NOT MATCH")
+	}
+
+	req.NewPassword = util.EncrypCode(req.NewPassword)
+
+	err = repo.UpdatePassword(ctx, domain.User{
+		NOCUST:         req.NoCust,
+		MOBILEPASSWORD: req.NewPassword,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }

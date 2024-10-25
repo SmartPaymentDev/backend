@@ -31,6 +31,12 @@ type LoginUserRequest struct {
 	MOBILEPASSWORD string `json:"mobilepassword"`
 }
 
+type ChangePasswordRequest struct {
+	NoCust      string `json:"no_cust"`
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
+}
+
 type UserResponse struct {
 	JwtToken string `json:"jwt_token"`
 }

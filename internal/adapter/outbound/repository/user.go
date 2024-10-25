@@ -40,3 +40,15 @@ func (u *UserRepository) GetUserByCustId(ctx context.Context, custId string) (do
 
 	return user, nil
 }
+
+func (u *UserRepository) UpdatePassword(ctx context.Context, req domain.User) error {
+	query := `UPDATE scctcust SET MOBILEPASSWORD = ? WHERE NOCUST = ? `
+
+	args := []interface{}{req.MOBILEPASSWORD, req.NOCUST}
+
+	_, err := u.db.ExecContext(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
