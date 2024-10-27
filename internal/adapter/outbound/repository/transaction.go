@@ -139,5 +139,9 @@ func (t *TransactionRepository) GetCountTransactionNow(ctx context.Context) (int
 	count := 1
 	err := t.db.QueryRowxContext(ctx, sql, args...).Scan(&count)
 
+	if count == 0 {
+		count = 1
+	}
+
 	return count, err
 }
