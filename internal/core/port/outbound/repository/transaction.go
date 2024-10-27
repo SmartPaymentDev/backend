@@ -14,4 +14,5 @@ type TransactionRepository interface {
 	GetTransactionDetailsByCustId(ctx context.Context, filter dto.FilterTransactionDetail) ([]domain.TransactionDetail, error)
 	GetCountTransactionDetailByCustId(ctx context.Context, filter dto.FilterTransactionDetail) (int, error)
 	CreateTransactionByCustId(ctx context.Context, req domain.Transaction) error
+	GetCountTransactionNow(ctx context.Context) (int, error)
 }

@@ -86,3 +86,8 @@ func EncrypCode(text string) string {
 	hasher.Write([]byte(text))
 	return hex.EncodeToString(hasher.Sum(nil))
 }
+
+func TransactonNo(count int) string {
+	date := GetCurrentDate()
+	return fmt.Sprintf(`MOBILE%d%02d%02d%05d`, date.Year(), date.Month(), date.Day(), count)
+}

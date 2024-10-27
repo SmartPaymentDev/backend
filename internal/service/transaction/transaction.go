@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"context"
+	"fmt"
 	"smart-payment-dev-be/internal/adapter/inbound/dto"
 	"smart-payment-dev-be/internal/core/port/outbound/registry"
 	"smart-payment-dev-be/shared/util"
@@ -119,19 +120,25 @@ func (t *TransactionService) CreateTransactionByCustId(ctx context.Context, toke
 
 	id, _ := strconv.Atoi(idCust)
 
+	urut, _ := repo.GetCountTransactionNow(ctx)
+
 	res := transactionDTO.ReqTransformIn(req)
+	res.TRANSNO = util.TransactonNo(urut)
 	res.CUSTID = id
+
+	// topup data
 	res.METODE = "TOP UP CASHLESS"
 	res.DEBET = 0
-
+	fmt.Println("T no ", res.TRANSNO)
 	err = repo.CreateTransactionByCustId(ctx, res)
 	if err != nil {
 		return err
 	}
 
+	// admin fee
 	res.METODE = "ADMIN FEE"
-	res.KREDIT = 0   // only data admin fee
-	res.DEBET = 1000 // admin fee
+	res.KREDIT = 0
+	res.DEBET = 1000 // only 1rb
 
 	err = repo.CreateTransactionByCustId(ctx, res)
 	if err != nil {

@@ -132,12 +132,7 @@ type FilterTransactionDetail struct {
 }
 
 type TransactionRequest struct {
-	NOREFF    string `json:"noreff"`
-	FIDBANK   string `json:"fidbank"`
-	KDCHANNEL string `json:"kdchannel"`
-	KREDIT    int    `json:"kredit"`
-	REFFBANK  string `json:"reffbank"`
-	TRANSNO   string `json:"transno"`
+	Amount int `json:"amount"`
 }
 
 type VSaldoVaResponse struct {
@@ -160,12 +155,9 @@ type TransactionResponses struct {
 
 func (t *TransactionDTO) ReqTransformIn(req TransactionRequest) domain.Transaction {
 	return domain.Transaction{
-		NOREFF:    req.NOREFF,
-		FIDBANK:   req.FIDBANK,
-		KDCHANNEL: req.KDCHANNEL,
-		KREDIT:    req.KREDIT,
-		REFFBANK:  req.REFFBANK,
-		TRANSNO:   req.TRANSNO,
+		KREDIT:  req.Amount,
+		NOREFF:  "MOBILE",
+		FIDBANK: "1140002",
 	}
 }
 
