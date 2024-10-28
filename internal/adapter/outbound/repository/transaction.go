@@ -131,8 +131,31 @@ func (t *TransactionRepository) CreateTransactionByCustId(ctx context.Context, r
 	return nil
 }
 
+func (t *TransactionRepository) CreateTransactionTransByCustId(ctx context.Context, req domain.Transaction) error {
+	query := `INSERT INTO sccttran (CUSTID, METODE, TRXDATE, NOREFF, KDCHANNEL, DEBET, KREDIT, TRANSNO) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+
+	args := []interface{}{req.CUSTID, req.METODE, util.GetCurrentDate(), req.NOREFF, req.KDCHANNEL, req.DEBET, req.KREDIT, req.TRANSNO}
+
+	_, err := t.db.ExecContext(ctx, query, args...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (t *TransactionRepository) GetCountTransactionNow(ctx context.Context) (int, error) {
 	sql := `SELECT count(urut) FROM sccttran_cashless WHERE DATE_FORMAT(TRXDATE, '%Y-%m-%d') = ? AND METODE = 'TOP UP CASHLESS'`
+
+	args := []interface{}{util.GetCurrentDate().Format("2006-01-02")}
+
+	count := 0
+	err := t.db.QueryRowxContext(ctx, sql, args...).Scan(&count)
+
+	return count + 1, err
+}
+
+func (t *TransactionRepository) GetCountTransactionTransNow(ctx context.Context) (int, error) {
+	sql := `SELECT count(urut) FROM sccttran WHERE DATE_FORMAT(TRXDATE, '%Y-%m-%d') = ? AND METODE = 'TOP UP CASHLESS'`
 
 	args := []interface{}{util.GetCurrentDate().Format("2006-01-02")}
 

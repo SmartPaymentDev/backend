@@ -127,11 +127,16 @@ func (t *TransactionService) CreateTransactionByCustId(ctx context.Context, toke
 
 	// topup data
 	res.METODE = "TOP UP CASHLESS"
-	res.DEBET = 0
 	err = repo.CreateTransactionByCustId(ctx, res)
 	if err != nil {
 		return err
 	}
+
+	// trans
+	urut, _ = repo.GetCountTransactionTransNow(ctx)
+	res.DEBET = res.KREDIT
+	res.TRANSNO = util.TransactonNo(urut)
+	repo.CreateTransactionTransByCustId(ctx, res)
 
 	// admin fee
 	res.METODE = "ADMIN FEE"
