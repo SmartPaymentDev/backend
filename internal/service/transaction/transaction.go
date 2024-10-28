@@ -108,17 +108,15 @@ func (t *TransactionService) GetTransactionDetailByCustId(ctx context.Context, f
 
 func (t *TransactionService) CreateTransactionByCustId(ctx context.Context, token string, req dto.TransactionRequest) error {
 	var transactionDTO dto.TransactionDTO
-
+	amount := 0
 	repo := t.repositoryRegistry.GetTransactionRepository()
 
 	idCust, err := util.ParseJwtToken(token)
-
 	if err != nil {
 		return err
 	}
 
 	id, _ := strconv.Atoi(idCust)
-
 	urut, _ := repo.GetCountTransactionNow(ctx)
 
 	res := transactionDTO.ReqTransformIn(req)
@@ -127,16 +125,13 @@ func (t *TransactionService) CreateTransactionByCustId(ctx context.Context, toke
 
 	// topup data
 	res.METODE = "TOP UP CASHLESS"
+	res.DEBET = 0
+	amount = res.KREDIT
+
 	err = repo.CreateTransactionByCustId(ctx, res)
 	if err != nil {
 		return err
 	}
-
-	// trans
-	urut, _ = repo.GetCountTransactionTransNow(ctx)
-	res.DEBET = res.KREDIT
-	res.TRANSNO = util.TransactonNo(urut)
-	repo.CreateTransactionTransByCustId(ctx, res)
 
 	// admin fee
 	res.METODE = "ADMIN FEE"
@@ -148,5 +143,13 @@ func (t *TransactionService) CreateTransactionByCustId(ctx context.Context, toke
 		return err
 	}
 
+	// trans
+	urut, _ = repo.GetCountTransactionTransNow(ctx)
+	res.METODE = "TOP UP CASHLESS"
+	res.KDCHANNEL = ""
+	res.KREDIT = 0
+	res.DEBET = amount
+	res.TRANSNO = util.TransactonNo(urut)
+	repo.CreateTransactionTransByCustId(ctx, res)
 	return nil
 }
