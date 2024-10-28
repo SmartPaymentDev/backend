@@ -145,7 +145,7 @@ func (t *TransactionService) CreateTransactionByCustId(ctx context.Context, toke
 
 	// trans
 	urut, _ = repo.GetCountTransactionTransNow(ctx)
-	res.METODE = "TOP UP CASHLESS"
+	res.METODE = "CASHLESS 1 VA"
 	res.KDCHANNEL = ""
 	res.KREDIT = 0
 	res.DEBET = amount

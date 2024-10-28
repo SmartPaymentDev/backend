@@ -37,67 +37,17 @@ type VSaldoVa struct {
 }
 
 type TransactionDetail struct {
-	CUSTID               int    `json:"custid"`
-	NIS                  string `json:"nis"`
-	Nama                 string `json:"nama"`
-	NamaPanggil          string `json:"nama_panggil"`
-	NoKK                 string `json:"no_kk"`
-	NIK                  string `json:"nik"`
-	NIKAyah              string `json:"nik_ayah"`
-	NIKIbu               string `json:"nik_ibu"`
-	VANO                 string `json:"vano"`
-	NISN                 string `json:"nisn"`
-	GENUSPlace           string `json:"genus_place"`
-	Birth                string `json:"birth"`
-	SekolahAsal          string `json:"sekolah_asal"`
-	AnakKeDari           string `json:"anak_ke_dari"`
-	Gender               string `json:"gender"`
-	NamaAyah             string `json:"nama_ayah"`
-	JobAyah              string `json:"job_ayah"`
-	ReligiAyah           string `json:"religi_ayah"`
-	EduAyah              string `json:"edu_ayah"`
-	AliveAyah            string `json:"alive_ayah"`
-	PenghasilanAyah      string `json:"penghasilan_ayah"`
-	NamaIbu              string `json:"nama_ibu"`
-	JobIbu               string `json:"job_ibu"`
-	ReligiIbu            string `json:"religi_ibu"`
-	EduIbu               string `json:"edu_ibu"`
-	AliveIbu             string `json:"alive_ibu"`
-	PenghasilanIbu       string `json:"penghasilan_ibu"`
-	NamaWali             string `json:"nama_wali"`
-	JobWali              string `json:"job_wali"`
-	ReligiWali           string `json:"religi_wali"`
-	PenghasilanWali      string `json:"penghasilan_wali"`
-	AlamatWali           string `json:"alamat_wali"`
-	Kemasyarakatan       string `json:"kemasyarakatan"`
-	TB                   string `json:"tb"`
-	BB                   string `json:"bb"`
-	LK                   string `json:"lk"`
-	Goldar               string `json:"goldar"`
-	Penyakit             string `json:"penyakit"`
-	Makanan              string `json:"makanan"`
-	PenyakitKel          string `json:"penyakit_kel"`
-	Asuransi             string `json:"asuransi"`
-	TanggunganKeluarga   string `json:"tanggungan_keluarga"`
-	PenanggungBiaya      string `json:"penanggung_biaya"`
-	DaerahTinggal        string `json:"daerah_tinggal"`
-	StatusTinggal        string `json:"status_tinggal"`
-	KondisiLantai        string `json:"kondisi_lantai"`
-	Bahasa               string `json:"bahasa"`
-	Prestasi             string `json:"prestasi"`
-	UnitPendidikan       string `json:"unit_pendidikan"`
-	Jurusan              string `json:"jurusan"`
-	Email                string `json:"email"`
-	Jalan                string `json:"jalan"`
-	RT                   string `json:"rt"`
-	Desa                 string `json:"desa"`
-	Kelurahan            string `json:"kelurahan"`
-	Kecamatan            string `json:"kecamatan"`
-	Kabupaten            string `json:"kabupaten"`
-	Provinsi             string `json:"provinsi"`
-	TanggunganKeluargaTS string `json:"tanggungan_keluarga_ts"`
-	EduWali              string `json:"edu_wali"`
-	ID                   string `json:"id"`
+	Urut      int    `json:"urut"`
+	CUSTID    int    `json:"custid"`
+	METODE    string `json:"metode"`
+	TRXDATE   string `json:"trxdate"`
+	NOREFF    string `json:"noreff"`
+	FIDBANK   string `json:"fidbank"`
+	KDCHANNEL string `json:"kdchannel"`
+	DEBET     int    `json:"debet"`
+	KREDIT    int    `json:"kredit"`
+	REFFBANK  string `json:"reffbank"`
+	TRANSNO   string `json:"transno"`
 }
 
 type VSaldoVaCashless struct {
@@ -213,67 +163,17 @@ func (t *TransactionDTO) GetTransactionDetailsTransformOut(res []domain.Transact
 
 	for _, data := range res {
 		list = append(list, TransactionDetail{
-			CUSTID:               data.CUSTID,
-			NIS:                  data.NIS,
-			Nama:                 data.Nama,
-			NamaPanggil:          data.NamaPanggil,
-			NoKK:                 data.Email,
-			NIK:                  data.NIK,
-			NIKAyah:              data.NIKAyah,
-			NIKIbu:               data.NIKIbu,
-			VANO:                 data.VANO,
-			NISN:                 data.NISN,
-			GENUSPlace:           data.GENUSPlace,
-			Birth:                data.Birth,
-			SekolahAsal:          data.SekolahAsal,
-			AnakKeDari:           data.AnakKeDari,
-			Gender:               data.Gender,
-			NamaAyah:             data.NamaAyah,
-			JobAyah:              data.JobAyah,
-			ReligiAyah:           data.ReligiAyah,
-			EduAyah:              data.EduAyah,
-			AliveAyah:            data.AliveAyah,
-			PenghasilanAyah:      data.PenghasilanAyah,
-			NamaIbu:              data.NamaIbu,
-			JobIbu:               data.JobIbu,
-			ReligiIbu:            data.ReligiIbu,
-			EduIbu:               data.EduIbu,
-			AliveIbu:             data.AliveIbu,
-			PenghasilanIbu:       data.PenghasilanIbu,
-			NamaWali:             data.NamaWali,
-			JobWali:              data.JobWali,
-			ReligiWali:           data.ReligiWali,
-			PenghasilanWali:      data.PenghasilanWali,
-			AlamatWali:           data.AlamatWali,
-			Kemasyarakatan:       data.Kemasyarakatan,
-			TB:                   data.TB,
-			BB:                   data.BB,
-			LK:                   data.LK,
-			Goldar:               data.Goldar,
-			Penyakit:             data.Penyakit,
-			Makanan:              data.Makanan,
-			PenyakitKel:          data.PenyakitKel,
-			Asuransi:             data.Asuransi,
-			TanggunganKeluarga:   data.TanggunganKeluarga,
-			PenanggungBiaya:      data.PenanggungBiaya,
-			DaerahTinggal:        data.DaerahTinggal,
-			StatusTinggal:        data.StatusTinggal,
-			KondisiLantai:        data.KondisiLantai,
-			Bahasa:               data.Bahasa,
-			Prestasi:             data.Prestasi,
-			UnitPendidikan:       data.UnitPendidikan,
-			Jurusan:              data.Jurusan,
-			Email:                data.Email,
-			Jalan:                data.Jalan,
-			RT:                   data.Email,
-			Desa:                 data.Desa,
-			Kelurahan:            data.Kelurahan,
-			Kecamatan:            data.Kecamatan,
-			Kabupaten:            data.Kabupaten,
-			Provinsi:             data.Provinsi,
-			TanggunganKeluargaTS: data.TanggunganKeluargaTS,
-			EduWali:              data.EduWali,
-			ID:                   data.ID,
+			Urut:      data.Urut,
+			CUSTID:    data.CUSTID,
+			METODE:    data.METODE,
+			TRXDATE:   data.TRXDATE,
+			NOREFF:    data.NOREFF,
+			FIDBANK:   data.FIDBANK,
+			KDCHANNEL: data.KDCHANNEL,
+			KREDIT:    data.KREDIT,
+			DEBET:     data.DEBET,
+			REFFBANK:  data.REFFBANK,
+			TRANSNO:   data.TRANSNO,
 		})
 	}
 

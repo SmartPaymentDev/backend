@@ -29,7 +29,7 @@ func (b *BillRepository) GetBillByCustId(ctx context.Context, filter dto.FilterB
 		filter.Page = (filter.PerPage*(filter.Page-1) + 1) - 1
 	}
 
-	sql += " ORDER BY FTGLTagihan DESC LIMIT ? OFFSET ?"
+	sql += " ORDER BY AA DESC LIMIT ? OFFSET ?"
 
 	args := []interface{}{filter.CustId, filter.PaidSt, filter.PerPage, filter.Page}
 

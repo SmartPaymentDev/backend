@@ -19,7 +19,7 @@ func NewTransactionRepository(db DBExecutor) *TransactionRepository {
 
 func (t *TransactionRepository) GetTransactionByCustId(ctx context.Context, filter dto.FilterTransaction) ([]domain.Transaction, error) {
 	var transactions []domain.Transaction
-	sql := `SELECT urut, COALESCE(CUSTID, 0), COALESCE(METODE, ''), COALESCE(TRXDATE, ''), COALESCE(NOREFF, ''), COALESCE(FIDBANK, ''), COALESCE(KDCHANNEL, ''), COALESCE(DEBET, 0), COALESCE(KREDIT, 0), COALESCE(REFFBANK, ''), COALESCE(TRANSNO, '') FROM sccttran WHERE CUSTID = ? LIMIT ? OFFSET ?`
+	sql := `SELECT urut, COALESCE(CUSTID, 0), COALESCE(METODE, ''), COALESCE(TRXDATE, ''), COALESCE(NOREFF, ''), COALESCE(FIDBANK, ''), COALESCE(KDCHANNEL, ''), COALESCE(DEBET, 0), COALESCE(KREDIT, 0), COALESCE(REFFBANK, ''), COALESCE(TRANSNO, '') FROM sccttran WHERE CUSTID = ? ORDER BY urut DESC LIMIT ? OFFSET ?`
 
 	if filter.Page != 0 {
 		filter.Page = (filter.PerPage*(filter.Page-1) + 1) - 1
@@ -83,7 +83,7 @@ func (t *TransactionRepository) GetVSaldoVaCashlessByCustId(ctx context.Context,
 
 func (t *TransactionRepository) GetTransactionDetailsByCustId(ctx context.Context, filter dto.FilterTransactionDetail) ([]domain.TransactionDetail, error) {
 	var transactions []domain.TransactionDetail
-	sql := `SELECT ID, COALESCE(CUSTID, 0), COALESCE(NIS, ''), COALESCE(Nama, ''), COALESCE(NamaPanggil, ''), COALESCE(NoKK, ''), COALESCE(NIK, ''), COALESCE(NIKAyah, ''), COALESCE(NIKIbu, ''), COALESCE(VANO, ''), COALESCE(NISN, ''), COALESCE(GENUSPlace, ''), COALESCE(Birth, ''), COALESCE(SekolahAsal, ''), COALESCE(AnakKeDari, ''), COALESCE(Gender, ''), COALESCE(NamaAyah, ''), COALESCE(JobAyah, ''), COALESCE(ReligiAyah, ''), COALESCE(EduAyah, ''), COALESCE(AliveAyah, ''), COALESCE(PenghasilanAyah, ''), COALESCE(NamaIbu, ''), COALESCE(JobIbu, ''), COALESCE(ReligiIbu, ''), COALESCE(EduIbu, ''), COALESCE(AliveIbu, ''), COALESCE(PenghasilanIbu, ''), COALESCE(NamaWali, ''), COALESCE(JobWali, ''), COALESCE(ReligiWali, ''), COALESCE(PenghasilanWali, ''), COALESCE(AlamatWali, ''), COALESCE(Kemasyarakatan, ''), COALESCE(TB, ''), COALESCE(BB, ''), COALESCE(LK, ''), COALESCE(Goldar, ''), COALESCE(Penyakit, ''), COALESCE(Makanan, ''), COALESCE(PenyakitKel, ''), COALESCE(Asuransi, ''), COALESCE(TanggunganKeluarga, ''), COALESCE(PenanggungBiaya, ''), COALESCE(DaerahTinggal, ''), COALESCE(StatusTinggal, ''), COALESCE(KondisiLantai, ''), COALESCE(Bahasa, ''), COALESCE(Prestasi, ''), COALESCE(UnitPendidikan, ''), COALESCE(Jurusan, ''), COALESCE(Email, ''), COALESCE(Jalan, ''), COALESCE(RT, ''), COALESCE(Desa, ''), COALESCE(Kelurahan, ''), COALESCE(Kecamatan, ''), COALESCE(Kabupaten, ''), COALESCE(Provinsi, ''), COALESCE(TanggunganKeluargaTS, ''), COALESCE(EduWali, '') FROM scctcust_detail WHERE CUSTID = ? LIMIT ? OFFSET ?`
+	sql := `SELECT urut, COALESCE(CUSTID, 0), COALESCE(METODE, ''), COALESCE(TRXDATE, ''), COALESCE(NOREFF, ''), COALESCE(FIDBANK, ''), COALESCE(KDCHANNEL, ''), COALESCE(DEBET, 0), COALESCE(KREDIT, 0), COALESCE(REFFBANK, ''), COALESCE(TRANSNO, '') FROM sccttran_cashless WHERE CUSTID = ? ORDER BY urut DESC LIMIT ? OFFSET ?`
 
 	if filter.Page != 0 {
 		filter.Page = (filter.PerPage*(filter.Page-1) + 1) - 1
@@ -99,7 +99,7 @@ func (t *TransactionRepository) GetTransactionDetailsByCustId(ctx context.Contex
 	for rows.Next() {
 		transaction := domain.TransactionDetail{}
 
-		if err = rows.Scan(&transaction.ID, &transaction.CUSTID, &transaction.NIS, &transaction.Nama, &transaction.NamaPanggil, &transaction.NoKK, &transaction.NIK, &transaction.NIKAyah, &transaction.NIKIbu, &transaction.VANO, &transaction.NISN, &transaction.GENUSPlace, &transaction.Birth, &transaction.SekolahAsal, &transaction.AnakKeDari, &transaction.Gender, &transaction.NamaAyah, &transaction.JobAyah, &transaction.ReligiAyah, &transaction.EduAyah, &transaction.AliveAyah, &transaction.PenghasilanAyah, &transaction.NamaIbu, &transaction.JobIbu, &transaction.ReligiIbu, &transaction.EduIbu, &transaction.AliveIbu, &transaction.PenghasilanIbu, &transaction.NamaWali, &transaction.JobWali, &transaction.ReligiWali, &transaction.PenghasilanWali, &transaction.AlamatWali, &transaction.Kemasyarakatan, &transaction.TB, &transaction.BB, &transaction.LK, &transaction.Goldar, &transaction.Penyakit, &transaction.Makanan, &transaction.PenyakitKel, &transaction.Asuransi, &transaction.TanggunganKeluarga, &transaction.PenanggungBiaya, &transaction.DaerahTinggal, &transaction.StatusTinggal, &transaction.KondisiLantai, &transaction.Bahasa, &transaction.Prestasi, &transaction.UnitPendidikan, &transaction.Jurusan, &transaction.Email, &transaction.Jalan, &transaction.RT, &transaction.Desa, &transaction.Kelurahan, &transaction.Kecamatan, &transaction.Kabupaten, &transaction.Provinsi, &transaction.TanggunganKeluargaTS, &transaction.EduWali); err != nil {
+		if err = rows.Scan(&transaction.Urut, &transaction.CUSTID, &transaction.METODE, &transaction.TRXDATE, &transaction.NOREFF, &transaction.FIDBANK, &transaction.KDCHANNEL, &transaction.DEBET, &transaction.KREDIT, &transaction.REFFBANK, &transaction.TRANSNO); err != nil {
 			return nil, err
 		}
 		transactions = append(transactions, transaction)
@@ -109,7 +109,7 @@ func (t *TransactionRepository) GetTransactionDetailsByCustId(ctx context.Contex
 }
 
 func (t *TransactionRepository) GetCountTransactionDetailByCustId(ctx context.Context, filter dto.FilterTransactionDetail) (int, error) {
-	sql := `SELECT count(ID) FROM scctcust_detail WHERE CUSTID = ?`
+	sql := `SELECT count(urut) FROM sccttran_cashless WHERE CUSTID = ?`
 
 	args := []interface{}{filter.CustId}
 
