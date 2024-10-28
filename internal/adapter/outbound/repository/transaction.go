@@ -132,16 +132,12 @@ func (t *TransactionRepository) CreateTransactionByCustId(ctx context.Context, r
 }
 
 func (t *TransactionRepository) GetCountTransactionNow(ctx context.Context) (int, error) {
-	sql := `SELECT count(urut) FROM sccttran_cashless WHERE DATE_FORMAT(TRXDATE, '%Y-%m-%d') = ?`
+	sql := `SELECT count(urut) FROM sccttran_cashless WHERE DATE_FORMAT(TRXDATE, '%Y-%m-%d') = ? AND METODE = 'TOP UP CASHLESS'`
 
 	args := []interface{}{util.GetCurrentDate().Format("2006-01-02")}
 
-	count := 1
+	count := 0
 	err := t.db.QueryRowxContext(ctx, sql, args...).Scan(&count)
 
-	if count == 0 {
-		count = 1
-	}
-
-	return count, err
+	return count + 1, err
 }
