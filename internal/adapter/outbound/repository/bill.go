@@ -19,7 +19,11 @@ func NewBillRepository(db DBExecutor) *BillRepository {
 
 func (b *BillRepository) GetBillByCustId(ctx context.Context, filter dto.FilterBill) ([]domain.Bill, error) {
 	var bills []domain.Bill
-	sql := `SELECT CUSTID, COALESCE(BILLCD, ''), COALESCE(BILLAC, ''), COALESCE(BILLNM, ''), COALESCE(BILLAM, 0), COALESCE(FLPART, ''), COALESCE(PAIDST, ''), COALESCE(PAIDDT, ''), COALESCE(NOREFF, ''), COALESCE(FSTSBolehBayar, ''), COALESCE(FUrutan, 0), COALESCE(FTGLTagihan, ''), COALESCE(FIDBANK, ''), COALESCE(FRecID, ''), COALESCE(AA, 0), COALESCE(BTA, ''), COALESCE(TRANSNO, ''), COALESCE(CreateID, ''), COALESCE(PAIDDT_ACTUAL, '') FROM scctbill WHERE CUSTID = ? AND PAIDST = ?`
+	sql := `SELECT CUSTID, COALESCE(BILLCD, ''), COALESCE(BILLAC, ''), COALESCE(BILLNM, ''), COALESCE(BILLAM, 0), COALESCE(FLPART, ''), COALESCE(PAIDST, ''), COALESCE(PAIDDT, ''), COALESCE(NOREFF, ''), COALESCE(FSTSBolehBayar, ''), COALESCE(FUrutan, 0), COALESCE(FTGLTagihan, ''), COALESCE(FIDBANK, ''), COALESCE(FRecID, ''), COALESCE(AA, 0), COALESCE(BTA, ''), COALESCE(TRANSNO, ''), COALESCE(CreateID, ''), COALESCE(PAIDDT_ACTUAL, '') FROM scctbill WHERE CUSTID = ?`
+
+	if filter.PaidSt != "" {
+		sql += fmt.Sprintf(` AND PAIDST = '%s'`, filter.PaidSt)
+	}
 
 	if filter.YearMonth != "" {
 		sql += fmt.Sprintf(` AND BILLAC = '%s'`, filter.YearMonth)
@@ -31,7 +35,7 @@ func (b *BillRepository) GetBillByCustId(ctx context.Context, filter dto.FilterB
 
 	sql += " ORDER BY AA DESC LIMIT ? OFFSET ?"
 
-	args := []interface{}{filter.CustId, filter.PaidSt, filter.PerPage, filter.Page}
+	args := []interface{}{filter.CustId, filter.PerPage, filter.Page}
 
 	rows, err := b.db.QueryxContext(ctx, sql, args...)
 	if err != nil {
