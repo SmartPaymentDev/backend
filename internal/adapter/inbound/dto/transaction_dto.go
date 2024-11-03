@@ -70,6 +70,8 @@ type VSaldoVaCashless struct {
 type FilterTransaction struct {
 	Token   string
 	CustId  string
+	From    string
+	To      string
 	Page    int
 	PerPage int
 }
@@ -77,6 +79,8 @@ type FilterTransaction struct {
 type FilterTransactionDetail struct {
 	Token   string
 	CustId  string
+	From    string
+	To      string
 	Page    int
 	PerPage int
 }

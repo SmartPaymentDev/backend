@@ -17,11 +17,10 @@ func (h *Handler) GetBillsByCustId() func(echo.Context) error {
 
 		p := pagination.NewFromRequest(c)
 		filter := dto.FilterBill{
-			Token:     token,
-			YearMonth: c.QueryParam("yearmonth"),
-			PaidSt:    c.QueryParam("paid_st"),
-			Page:      p.Page,
-			PerPage:   p.PerPage,
+			Token:   token,
+			PaidSt:  c.QueryParam("paid_st"),
+			Page:    p.Page,
+			PerPage: p.PerPage,
 		}
 
 		service := h.serviceRegistry.GetBillService()

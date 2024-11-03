@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"smart-payment-dev-be/internal/adapter/inbound/dto"
 	"smart-payment-dev-be/internal/core/domain"
 	"smart-payment-dev-be/shared/util"
@@ -19,11 +20,17 @@ func NewTransactionRepository(db DBExecutor) *TransactionRepository {
 
 func (t *TransactionRepository) GetTransactionByCustId(ctx context.Context, filter dto.FilterTransaction) ([]domain.Transaction, error) {
 	var transactions []domain.Transaction
-	sql := `SELECT urut, COALESCE(CUSTID, 0), COALESCE(METODE, ''), COALESCE(TRXDATE, ''), COALESCE(NOREFF, ''), COALESCE(FIDBANK, ''), COALESCE(KDCHANNEL, ''), COALESCE(DEBET, 0), COALESCE(KREDIT, 0), COALESCE(REFFBANK, ''), COALESCE(TRANSNO, '') FROM sccttran WHERE CUSTID = ? ORDER BY urut DESC LIMIT ? OFFSET ?`
+	sql := `SELECT urut, COALESCE(CUSTID, 0), COALESCE(METODE, ''), COALESCE(TRXDATE, ''), COALESCE(NOREFF, ''), COALESCE(FIDBANK, ''), COALESCE(KDCHANNEL, ''), COALESCE(DEBET, 0), COALESCE(KREDIT, 0), COALESCE(REFFBANK, ''), COALESCE(TRANSNO, '') FROM sccttran WHERE CUSTID = ?`
+
+	if filter.From != "" && filter.To != "" {
+		sql += fmt.Sprintf(` AND TRXDATE BETWEEN '%s' AND '%s'`, filter.From, filter.To)
+	}
 
 	if filter.Page != 0 {
 		filter.Page = (filter.PerPage*(filter.Page-1) + 1) - 1
 	}
+
+	sql += " ORDER BY urut DESC LIMIT ? OFFSET ?"
 
 	args := []interface{}{filter.CustId, filter.PerPage, filter.Page}
 
@@ -46,6 +53,10 @@ func (t *TransactionRepository) GetTransactionByCustId(ctx context.Context, filt
 
 func (t *TransactionRepository) GetCountTransactionByCustId(ctx context.Context, filter dto.FilterTransaction) (int, error) {
 	sql := `SELECT count(urut) FROM sccttran WHERE CUSTID = ?`
+
+	if filter.From != "" && filter.To != "" {
+		sql += fmt.Sprintf(` AND TRXDATE BETWEEN '%s' AND '%s'`, filter.From, filter.To)
+	}
 
 	args := []interface{}{filter.CustId}
 
@@ -83,11 +94,17 @@ func (t *TransactionRepository) GetVSaldoVaCashlessByCustId(ctx context.Context,
 
 func (t *TransactionRepository) GetTransactionDetailsByCustId(ctx context.Context, filter dto.FilterTransactionDetail) ([]domain.TransactionDetail, error) {
 	var transactions []domain.TransactionDetail
-	sql := `SELECT urut, COALESCE(CUSTID, 0), COALESCE(METODE, ''), COALESCE(TRXDATE, ''), COALESCE(NOREFF, ''), COALESCE(FIDBANK, ''), COALESCE(KDCHANNEL, ''), COALESCE(DEBET, 0), COALESCE(KREDIT, 0), COALESCE(REFFBANK, ''), COALESCE(TRANSNO, '') FROM sccttran_cashless WHERE CUSTID = ? ORDER BY urut DESC LIMIT ? OFFSET ?`
+	sql := `SELECT urut, COALESCE(CUSTID, 0), COALESCE(METODE, ''), COALESCE(TRXDATE, ''), COALESCE(NOREFF, ''), COALESCE(FIDBANK, ''), COALESCE(KDCHANNEL, ''), COALESCE(DEBET, 0), COALESCE(KREDIT, 0), COALESCE(REFFBANK, ''), COALESCE(TRANSNO, '') FROM sccttran_cashless WHERE CUSTID = ?`
+
+	if filter.From != "" && filter.To != "" {
+		sql += fmt.Sprintf(` AND TRXDATE BETWEEN '%s' AND '%s'`, filter.From, filter.To)
+	}
 
 	if filter.Page != 0 {
 		filter.Page = (filter.PerPage*(filter.Page-1) + 1) - 1
 	}
+
+	sql += " ORDER BY urut DESC LIMIT ? OFFSET ?"
 
 	args := []interface{}{filter.CustId, filter.PerPage, filter.Page}
 
@@ -110,6 +127,10 @@ func (t *TransactionRepository) GetTransactionDetailsByCustId(ctx context.Contex
 
 func (t *TransactionRepository) GetCountTransactionDetailByCustId(ctx context.Context, filter dto.FilterTransactionDetail) (int, error) {
 	sql := `SELECT count(urut) FROM sccttran_cashless WHERE CUSTID = ?`
+
+	if filter.From != "" && filter.To != "" {
+		sql += fmt.Sprintf(` AND TRXDATE BETWEEN '%s' AND '%s'`, filter.From, filter.To)
+	}
 
 	args := []interface{}{filter.CustId}
 

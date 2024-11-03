@@ -5,12 +5,13 @@ import "smart-payment-dev-be/internal/core/domain"
 type BillDto struct{}
 
 type FilterBill struct {
-	CustId    string
-	Token     string
-	YearMonth string
-	PaidSt    string
-	Page      int
-	PerPage   int
+	CustId  string
+	Token   string
+	From    string
+	To      string
+	PaidSt  string
+	Page    int
+	PerPage int
 }
 
 type Bill struct {

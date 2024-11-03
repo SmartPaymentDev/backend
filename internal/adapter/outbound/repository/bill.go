@@ -25,16 +25,17 @@ func (b *BillRepository) GetBillByCustId(ctx context.Context, filter dto.FilterB
 		sql += fmt.Sprintf(` AND PAIDST = '%s'`, filter.PaidSt)
 	}
 
-	if filter.YearMonth != "" {
-		sql += fmt.Sprintf(` AND BILLAC = '%s'`, filter.YearMonth)
-	}
-
 	if filter.Page != 0 {
 		filter.Page = (filter.PerPage*(filter.Page-1) + 1) - 1
 	}
 
-	sql += " ORDER BY AA DESC LIMIT ? OFFSET ?"
+	if filter.PaidSt != "1" {
+		sql += " ORDER BY PAIDDT DESC"
+	} else {
+		sql += " ORDER BY FUrutan ASC"
+	}
 
+	sql += " LIMIT ? OFFSET ?"
 	args := []interface{}{filter.CustId, filter.PerPage, filter.Page}
 
 	rows, err := b.db.QueryxContext(ctx, sql, args...)
@@ -55,13 +56,13 @@ func (b *BillRepository) GetBillByCustId(ctx context.Context, filter dto.FilterB
 }
 
 func (b *BillRepository) GetCountBillByCustId(ctx context.Context, filter dto.FilterBill) (int, error) {
-	sql := `SELECT count(CUSTID) FROM scctbill WHERE CUSTID = ? AND PAIDST = ?`
+	sql := `SELECT count(CUSTID) FROM scctbill WHERE CUSTID = ?`
 
-	if filter.YearMonth != "" {
-		sql += fmt.Sprintf(` AND BILLAC = '%s'`, filter.YearMonth)
+	if filter.PaidSt != "" {
+		sql += fmt.Sprintf(` AND PAIDST = '%s'`, filter.PaidSt)
 	}
 
-	args := []interface{}{filter.CustId, filter.PaidSt}
+	args := []interface{}{filter.CustId}
 
 	count := 0
 	err := b.db.QueryRowxContext(ctx, sql, args...).Scan(&count)

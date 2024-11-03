@@ -18,6 +18,8 @@ func (h *Handler) GetTransactionsByCustId() func(echo.Context) error {
 		p := pagination.NewFromRequest(c)
 		filter := dto.FilterTransaction{
 			Token:   token,
+			From:    c.QueryParam("from"),
+			To:      c.QueryParam("to"),
 			Page:    p.Page,
 			PerPage: p.PerPage,
 		}
@@ -55,6 +57,8 @@ func (h *Handler) GetTransactionDetailsByCustId() func(echo.Context) error {
 		p := pagination.NewFromRequest(c)
 		filter := dto.FilterTransactionDetail{
 			Token:   token,
+			From:    c.QueryParam("from"),
+			To:      c.QueryParam("to"),
 			Page:    p.Page,
 			PerPage: p.PerPage,
 		}
