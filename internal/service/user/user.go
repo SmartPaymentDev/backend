@@ -67,13 +67,9 @@ func (b *UserService) GetUserByMe(ctx context.Context, token string) (interface{
 
 func (b *UserService) ChangePassword(ctx context.Context, req dto.ChangePasswordRequest) error {
 	repo := b.repositoryRegistry.GetUserRepository()
-	user, err := repo.GetUserByNoCust(ctx, req.NoCust)
+	_, err := repo.GetUserByNoCust(ctx, req.NoCust)
 	if err != nil {
 		return errors.New("NO CUST NOT FOUND")
-	}
-	validPass := util.ComparePassword(req.OldPassword, user.MOBILEPASSWORD)
-	if !validPass {
-		return errors.New("OLD PASSWORD NOT MATCH")
 	}
 
 	req.NewPassword = util.EncrypCode(req.NewPassword)

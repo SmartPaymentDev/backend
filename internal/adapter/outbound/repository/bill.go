@@ -29,7 +29,7 @@ func (b *BillRepository) GetBillByCustId(ctx context.Context, filter dto.FilterB
 		filter.Page = (filter.PerPage*(filter.Page-1) + 1) - 1
 	}
 
-	if filter.PaidSt != "1" {
+	if filter.PaidSt == "1" {
 		sql += " ORDER BY PAIDDT DESC"
 	} else {
 		sql += " ORDER BY FUrutan ASC"

@@ -23,7 +23,7 @@ func (t *TransactionRepository) GetTransactionByCustId(ctx context.Context, filt
 	sql := `SELECT urut, COALESCE(CUSTID, 0), COALESCE(METODE, ''), COALESCE(TRXDATE, ''), COALESCE(NOREFF, ''), COALESCE(FIDBANK, ''), COALESCE(KDCHANNEL, ''), COALESCE(DEBET, 0), COALESCE(KREDIT, 0), COALESCE(REFFBANK, ''), COALESCE(TRANSNO, '') FROM sccttran WHERE CUSTID = ?`
 
 	if filter.From != "" && filter.To != "" {
-		sql += fmt.Sprintf(` AND TRXDATE BETWEEN '%s' AND '%s'`, filter.From, filter.To)
+		sql += fmt.Sprintf(` AND DATE(TRXDATE) BETWEEN '%s' AND '%s'`, filter.From, filter.To)
 	}
 
 	if filter.Page != 0 {
@@ -55,7 +55,7 @@ func (t *TransactionRepository) GetCountTransactionByCustId(ctx context.Context,
 	sql := `SELECT count(urut) FROM sccttran WHERE CUSTID = ?`
 
 	if filter.From != "" && filter.To != "" {
-		sql += fmt.Sprintf(` AND TRXDATE BETWEEN '%s' AND '%s'`, filter.From, filter.To)
+		sql += fmt.Sprintf(` AND DATE(TRXDATE) BETWEEN '%s' AND '%s'`, filter.From, filter.To)
 	}
 
 	args := []interface{}{filter.CustId}
@@ -97,7 +97,7 @@ func (t *TransactionRepository) GetTransactionDetailsByCustId(ctx context.Contex
 	sql := `SELECT urut, COALESCE(CUSTID, 0), COALESCE(METODE, ''), COALESCE(TRXDATE, ''), COALESCE(NOREFF, ''), COALESCE(FIDBANK, ''), COALESCE(KDCHANNEL, ''), COALESCE(DEBET, 0), COALESCE(KREDIT, 0), COALESCE(REFFBANK, ''), COALESCE(TRANSNO, '') FROM sccttran_cashless WHERE CUSTID = ?`
 
 	if filter.From != "" && filter.To != "" {
-		sql += fmt.Sprintf(` AND TRXDATE BETWEEN '%s' AND '%s'`, filter.From, filter.To)
+		sql += fmt.Sprintf(` AND DATE(TRXDATE) BETWEEN '%s' AND '%s'`, filter.From, filter.To)
 	}
 
 	if filter.Page != 0 {
@@ -129,7 +129,7 @@ func (t *TransactionRepository) GetCountTransactionDetailByCustId(ctx context.Co
 	sql := `SELECT count(urut) FROM sccttran_cashless WHERE CUSTID = ?`
 
 	if filter.From != "" && filter.To != "" {
-		sql += fmt.Sprintf(` AND TRXDATE BETWEEN '%s' AND '%s'`, filter.From, filter.To)
+		sql += fmt.Sprintf(` AND DATE(TRXDATE) BETWEEN '%s' AND '%s'`, filter.From, filter.To)
 	}
 
 	args := []interface{}{filter.CustId}

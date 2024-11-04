@@ -1,12 +1,17 @@
 package dto
 
-import "smart-payment-dev-be/internal/core/domain"
+import (
+	"fmt"
+	"smart-payment-dev-be/internal/core/domain"
+	"strconv"
+)
 
 type UserDTO struct{}
 
 type User struct {
 	CUSTID     int    `json:"custid"`
 	NOCUST     string `json:"nocust"`
+	NO_VA      string `json:"no_va"`
 	NMCUST     string `json:"nmcust"`
 	NUM2ND     string `json:"num_2_nd"`
 	STCUST     string `json:"stcust"`
@@ -33,7 +38,6 @@ type LoginUserRequest struct {
 
 type ChangePasswordRequest struct {
 	NoCust      string `json:"no_cust"`
-	OldPassword string `json:"old_password"`
 	NewPassword string `json:"new_password"`
 }
 
@@ -59,10 +63,12 @@ func (ud *UserDTO) LoginUserTransformOut(token string) UserResponse {
 }
 
 func (ud *UserDTO) GetUserByMe(user domain.User) UserResponseByMe {
+	noCust, _ := strconv.Atoi(user.NOCUST)
 	return UserResponseByMe{
 		User: User{
 			CUSTID:     user.CUSTID,
 			NOCUST:     user.NOCUST,
+			NO_VA:      fmt.Sprintf(`751001%010d`, noCust),
 			NMCUST:     user.NMCUST,
 			NUM2ND:     user.NUM2ND,
 			STCUST:     user.STCUST,
